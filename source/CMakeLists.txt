@@ -19,12 +19,12 @@
 
 
 if(${CMAKE_C_COMPILER_ID} STREQUAL GNU)
-    set(STARTUP_ASM "bootstrap_gcc/startup_stm32f429xx.s")
+    set(STARTUP_ASM "bootstrap_gcc/startup_stm32f091xc.s")
     set(STARTUP_SRC "")
 else()
     set(STARTUP_ASM "")
     set(STARTUP_SRC "")
-    message(FATAL_ERROR "Unsupported target toolchain (gcc and armcc are supported)")
+    message(FATAL_ERROR "Unsupported target toolchain (only gcc is supported)")
 endif()
 
 
@@ -32,12 +32,12 @@ endif()
 enable_language(ASM)
 set_property(SOURCE ${STARTUP_ASM} PROPERTY LANGUAGE ASM)
 
-add_library(mbed-hal-st-stm32f429zi
+add_library(mbed-hal-st-stm32f091rc
     ${STARTUP_ASM}
     ${STARTUP_SRC}
     "PeripheralPins.c"
 )
-set_target_properties(mbed-hal-st-stm32f429zi PROPERTIES
+set_target_properties(mbed-hal-st-stm32f091rc PROPERTIES
     LINKER_LANGUAGE C
 )
 
@@ -49,7 +49,7 @@ else()
 endif()
 
 #TODO: target dependencies should not be set here
-target_link_libraries(mbed-hal-st-stm32f429zi
+target_link_libraries(mbed-hal-st-stm32f091rc
     ${EXTRA_LINK_LIBS}
     mbed-hal
 )

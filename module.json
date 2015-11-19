@@ -1,0 +1,29 @@
+{
+  "name": "mbed-hal-st-stm32f091rc",
+  "version": "0.0.0",
+  "description": "mbed HAL for stm32f091rc microcontrollers",
+  "keywords": [
+    "mbed",
+    "mbed-official"
+  ],
+  "author": "STMicroelectronics",
+  "homepage": "https://github.com/ARMmbed/mbed-hal-st-stm32f091rc",
+  "licenses": [
+    {
+      "url": "https://spdx.org/licenses/Apache-2.0",
+      "type": "Apache-2.0"
+    },
+    {
+      "url": "https://spdx.org/licenses/BSD-3-Clause",
+      "type": "BSD-3-Clause"
+    }
+  ],
+  "extraIncludes": [
+    "mbed-hal-st-stm32f091rc"
+  ],
+  "dependencies": {
+    "cmsis-core": "^1.0.0",
+    "uvisor-lib": "^1.0.2"
+  },
+  "targetDependencies": {}
+}

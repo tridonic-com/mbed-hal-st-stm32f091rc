@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file      startup_stm32f091xc.s
   * @author    MCD Application Team
-  * @version   V2.2.2
-  * @date      26-June-2015
+  * @version   V2.1.0
+  * @date      03-Oct-2014
   * @brief     STM32F091xC devices vector table for Atollic TrueSTUDIO toolchain.
   *            This module performs:
   *                - Set the initial SP
@@ -64,7 +64,7 @@ defined in linker script */
   .weak Reset_Handler
   .type Reset_Handler, %function
 Reset_Handler:
-  ldr   r0, =_estack
+  ldr   r0, =__stack
   mov   sp, r0          /* set stack pointer */
 
 /* Copy the data segment initializers from flash to SRAM */
@@ -98,21 +98,19 @@ LoopFillZerobss:
   bcc FillZerobss
 
 /* Call the clock system intitialization function.*/
+  bl  SystemInit   
 /* Call uVisor initialization function. */
-  bl SystemInitPre
-  bl HAL_InitPre
   bl uvisor_init
-  bl  SystemInit
 /* Call static constructors */
   //bl __libc_init_array
 /* Call the application's entry point.*/
   //bl main
-//LoopForever:
-  //  b LoopForever
-  // Calling the crt0 'cold-start' entry point. There __libc_init_array is called
-  // and when existing hardware_init_hook() and software_init_hook() before
-  // starting main(). software_init_hook() is available and has to be called due
-  // to initializsation when using rtos.
+/**
+ * Calling the crt0 'cold-start' entry point. There __libc_init_array is called
+ * and when existing hardware_init_hook() and software_init_hook() before 
+ * starting main(). software_init_hook() is available and has to be called due 
+ * to initializsation when using rtos.
+*/
   bl _start
   bx  lr
 .size Reset_Handler, .-Reset_Handler
@@ -143,7 +141,7 @@ Infinite_Loop:
 
 
 g_pfnVectors:
-  .word  _estack
+  .word  __stack
   .word  Reset_Handler
   .word  NMI_Handler
   .word  HardFault_Handler

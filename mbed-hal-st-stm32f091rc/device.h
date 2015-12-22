@@ -44,7 +44,7 @@
 
 #define DEVICE_I2C              1
 #define DEVICE_I2CSLAVE         0
-#define DEVICE_I2C_DMA			1
+#define DEVICE_I2C_DMA          1
 
 #define DEVICE_SPI              1
 #define DEVICE_SPI_ASYNCH       0

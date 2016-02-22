@@ -1,6 +1,6 @@
 {
   "name": "mbed-hal-st-stm32f091rc",
-  "version": "0.0.0-tri-0.0.2",
+  "version": "0.0.0-tri-0.0.5",
   "description": "mbed HAL for stm32f091rc microcontrollers",
   "keywords": [],
   "author": "Javier Gomez Moreno <javier.moreno@tridonic.com>",
@@ -18,7 +18,7 @@
     "mbed-hal-st-stm32f091rc"
   ],
   "dependencies": {
-    "cmsis-core": "tridonic-com/cmsis-core#1.1.0-tri-0.0.2",
+    "cmsis-core": "tridonic-com/cmsis-core#1.1.0-tri-0.0.5",
     "uvisor-lib": "^1.0.0"
   },
   "targetDependencies": {}

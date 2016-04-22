@@ -1,6 +1,6 @@
 {
   "name": "mbed-hal-st-stm32f091rc",
-  "version": "0.0.0-tri-0.0.5",
+  "version": "0.0.0-tri-0.1.3",
   "description": "mbed HAL for stm32f091rc microcontrollers",
   "keywords": [],
   "author": "Javier Gomez Moreno <javier.moreno@tridonic.com>",

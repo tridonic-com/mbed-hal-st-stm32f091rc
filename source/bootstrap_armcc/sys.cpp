@@ -1,4 +1,6 @@
-/* mbed Microcontroller Library
+/* mbed Microcontroller Library - stackheap
+ * Setup a fixed single stack/heap memory model, 
+ * between the top of the RW/ZI region and the stackpointer
  *******************************************************************************
  * Copyright (c) 2014, STMicroelectronics
  * All rights reserved.
@@ -24,57 +26,31 @@
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
  *******************************************************************************
  */
-#ifndef MBED_PINDEFS_H
-#define MBED_PINDEFS_H
-
-#include "cmsis.h"
 
 #ifdef __cplusplus
 extern "C" {
-#endif
+#endif 
 
-// See stm32f4xx_hal_gpio.h and stm32f4xx_hal_gpio_ex.h for values of MODE, PUPD and AFNUM
-#define STM_PIN_DATA(MODE, PUPD, AFNUM)  ((int)(((AFNUM) << 7) | ((PUPD) << 4) | ((MODE) << 0)))
-#define STM_PIN_MODE(X)   (((X) >> 0) & 0x0F)
-#define STM_PIN_PUPD(X)   (((X) >> 4) & 0x07)
-#define STM_PIN_AFNUM(X)  (((X) >> 7) & 0x0F)
-#define STM_MODE_INPUT              (0)
-#define STM_MODE_OUTPUT_PP          (1)
-#define STM_MODE_OUTPUT_OD          (2)
-#define STM_MODE_AF_PP              (3)
-#define STM_MODE_AF_OD              (4)
-#define STM_MODE_ANALOG             (5)
-#define STM_MODE_IT_RISING          (6)
-#define STM_MODE_IT_FALLING         (7)
-#define STM_MODE_IT_RISING_FALLING  (8)
-#define STM_MODE_EVT_RISING         (9)
-#define STM_MODE_EVT_FALLING        (10)
-#define STM_MODE_EVT_RISING_FALLING (11)
-#define STM_MODE_IT_EVT_RESET       (12)
+#include <rt_misc.h>
+#include <stdint.h>
 
-// High nibble = port number (0=A, 1=B, 2=C, 3=D, 4=E, 5=F, 6=G, 7=H)
-// Low nibble  = pin number
-#define STM_PORT(X) (((uint32_t)(X) >> 4) & 0xF)
-#define STM_PIN(X)  ((uint32_t)(X) & 0xF)
+extern char Image$$RW_IRAM1$$ZI$$Limit[];
 
-typedef enum {
-    PIN_INPUT,
-    PIN_OUTPUT
-} PinDirection;
+extern __value_in_regs struct __initial_stackheap __user_setup_stackheap(uint32_t R0, uint32_t R1, uint32_t R2, uint32_t R3) {
+    uint32_t zi_limit = (uint32_t)Image$$RW_IRAM1$$ZI$$Limit;
+    uint32_t sp_limit = __current_sp();
 
-typedef enum {
-    PullNone  = 0,
-    PullUp    = 1,
-    PullDown  = 2,
-    OpenDrain = 3,
-    PullDefault = PullNone
-} PinMode;
+    zi_limit = (zi_limit + 7) & ~0x7;    // ensure zi_limit is 8-byte aligned
+
+    struct __initial_stackheap r;
+    r.heap_base = zi_limit;
+    r.heap_limit = sp_limit;
+    return r;
+}
 
 #ifdef __cplusplus
 }
-#endif
-
-#endif //MBED_PINDEFS_H
+#endif 

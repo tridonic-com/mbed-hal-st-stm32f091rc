@@ -18,7 +18,14 @@
 
 // Minar platform configuration
 
-#define MINAR_PLATFORM_TIME_BASE  2000
-#define MINAR_PLATFORM_MINIMUM_SLEEP 2
+#define MINAR_PLATFORM_TIME_BASE  2000                   // ticks per second
+#define MINAR_PLATFORM_MINIMUM_SLEEP 2                   // in ticks
+
+#define MODULE_SIZE_SPI         2
+#define MODULES_SIZE_I2C        2
+//#define MODULE_SIZE_SERIAL      3
+
+// Transaction queue size for each peripheral
+#define TRANSACTION_QUEUE_SIZE_SPI   16
 
 #endif

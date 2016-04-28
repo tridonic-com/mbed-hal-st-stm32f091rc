@@ -39,15 +39,15 @@
   *
   ******************************************************************************
   */
- 
+
   .syntax unified
   .cpu cortex-m0
   .fpu softvfp
   .thumb
- 
+
 .global g_pfnVectors
 .global Default_Handler
- 
+
 /* start address for the initialization values of the .data section.
 defined in linker script */
 .word _sidata
@@ -59,24 +59,24 @@ defined in linker script */
 .word _sbss
 /* end address for the .bss section. defined in linker script */
 .word _ebss
- 
+
   .section .text.Reset_Handler
   .weak Reset_Handler
   .type Reset_Handler, %function
 Reset_Handler:
   ldr   r0, =__stack
   mov   sp, r0          /* set stack pointer */
- 
+
 /* Copy the data segment initializers from flash to SRAM */
   movs r1, #0
   b LoopCopyDataInit
- 
+
 CopyDataInit:
   ldr r3, =_sidata
   ldr r3, [r3, r1]
   str r3, [r0, r1]
   adds r1, r1, #4
- 
+
 LoopCopyDataInit:
   ldr r0, =_sdata
   ldr r3, =_edata
@@ -90,33 +90,35 @@ FillZerobss:
   movs r3, #0
   str  r3, [r2]
   adds r2, r2, #4
- 
- 
+
+
 LoopFillZerobss:
   ldr r3, = _ebss
   cmp r2, r3
   bcc FillZerobss
- 
+
 /* Call the clock system intitialization function.*/
-    bl  SystemInit
+  bl  SystemInit   
+/* Call uVisor initialization function. */
+  //bl uvisor_init
 /* Call static constructors */
-    //bl __libc_init_array
+  //bl __libc_init_array
 /* Call the application's entry point.*/
-    //bl  main
+  //bl main
 /**
  * Calling the crt0 'cold-start' entry point. There __libc_init_array is called
  * and when existing hardware_init_hook() and software_init_hook() before 
  * starting main(). software_init_hook() is available and has to be called due 
  * to initializsation when using rtos.
 */
-    bl _start
+  bl _start
  
 LoopForever:
     b LoopForever
  
  
 .size Reset_Handler, .-Reset_Handler
- 
+
 /**
  * @brief  This is the code that gets called when the processor receives an
  *         unexpected interrupt.  This simply enters an infinite loop, preserving
@@ -140,8 +142,8 @@ Infinite_Loop:
    .section .isr_vector,"a",%progbits
   .type g_pfnVectors, %object
   .size g_pfnVectors, .-g_pfnVectors
- 
- 
+
+
 g_pfnVectors:
   .word  __stack
   .word  Reset_Handler
@@ -190,7 +192,7 @@ g_pfnVectors:
   .word  USART2_IRQHandler                 /* USART2                       */
   .word  USART3_8_IRQHandler               /* USART3, USART4, USART5, USART6, USART7, USART8 */
   .word  CEC_CAN_IRQHandler                /* CEC and CAN                  */
- 
+
 /*******************************************************************************
 *
 * Provide weak aliases for each Exception handler to the Default_Handler.
@@ -198,113 +200,114 @@ g_pfnVectors:
 * this definition.
 *
 *******************************************************************************/
- 
+
   .weak      NMI_Handler
   .thumb_set NMI_Handler,Default_Handler
- 
+
   .weak      HardFault_Handler
   .thumb_set HardFault_Handler,Default_Handler
- 
+
   .weak      SVC_Handler
   .thumb_set SVC_Handler,Default_Handler
- 
+
   .weak      PendSV_Handler
   .thumb_set PendSV_Handler,Default_Handler
- 
+
   .weak      SysTick_Handler
   .thumb_set SysTick_Handler,Default_Handler
- 
+
   .weak      WWDG_IRQHandler
   .thumb_set WWDG_IRQHandler,Default_Handler
- 
+
   .weak      PVD_VDDIO2_IRQHandler
   .thumb_set PVD_VDDIO2_IRQHandler,Default_Handler
- 
+
   .weak      RTC_IRQHandler
   .thumb_set RTC_IRQHandler,Default_Handler
- 
+
   .weak      FLASH_IRQHandler
   .thumb_set FLASH_IRQHandler,Default_Handler
- 
+
   .weak      RCC_CRS_IRQHandler
   .thumb_set RCC_CRS_IRQHandler,Default_Handler
- 
+
   .weak      EXTI0_1_IRQHandler
   .thumb_set EXTI0_1_IRQHandler,Default_Handler
- 
+
   .weak      EXTI2_3_IRQHandler
   .thumb_set EXTI2_3_IRQHandler,Default_Handler
- 
+
   .weak      EXTI4_15_IRQHandler
   .thumb_set EXTI4_15_IRQHandler,Default_Handler
- 
+
   .weak      TSC_IRQHandler
   .thumb_set TSC_IRQHandler,Default_Handler
- 
+
   .weak      DMA1_Ch1_IRQHandler
   .thumb_set DMA1_Ch1_IRQHandler,Default_Handler
- 
+
   .weak      DMA1_Ch2_3_DMA2_Ch1_2_IRQHandler
   .thumb_set DMA1_Ch2_3_DMA2_Ch1_2_IRQHandler,Default_Handler
- 
+
   .weak      DMA1_Ch4_7_DMA2_Ch3_5_IRQHandler
   .thumb_set DMA1_Ch4_7_DMA2_Ch3_5_IRQHandler,Default_Handler
- 
+
   .weak      ADC1_COMP_IRQHandler
   .thumb_set ADC1_COMP_IRQHandler,Default_Handler
- 
+
   .weak      TIM1_BRK_UP_TRG_COM_IRQHandler
   .thumb_set TIM1_BRK_UP_TRG_COM_IRQHandler,Default_Handler
- 
+
   .weak      TIM1_CC_IRQHandler
   .thumb_set TIM1_CC_IRQHandler,Default_Handler
- 
+
   .weak      TIM2_IRQHandler
   .thumb_set TIM2_IRQHandler,Default_Handler
- 
+
   .weak      TIM3_IRQHandler
   .thumb_set TIM3_IRQHandler,Default_Handler
- 
+
   .weak      TIM6_DAC_IRQHandler
   .thumb_set TIM6_DAC_IRQHandler,Default_Handler
- 
+
   .weak      TIM7_IRQHandler
   .thumb_set TIM7_IRQHandler,Default_Handler
- 
+
   .weak      TIM14_IRQHandler
   .thumb_set TIM14_IRQHandler,Default_Handler
- 
+
   .weak      TIM15_IRQHandler
   .thumb_set TIM15_IRQHandler,Default_Handler
- 
+
   .weak      TIM16_IRQHandler
   .thumb_set TIM16_IRQHandler,Default_Handler
- 
+
   .weak      TIM17_IRQHandler
   .thumb_set TIM17_IRQHandler,Default_Handler
- 
+
   .weak      I2C1_IRQHandler
   .thumb_set I2C1_IRQHandler,Default_Handler
- 
+
   .weak      I2C2_IRQHandler
   .thumb_set I2C2_IRQHandler,Default_Handler
- 
+
   .weak      SPI1_IRQHandler
   .thumb_set SPI1_IRQHandler,Default_Handler
- 
+
   .weak      SPI2_IRQHandler
   .thumb_set SPI2_IRQHandler,Default_Handler
- 
+
   .weak      USART1_IRQHandler
   .thumb_set USART1_IRQHandler,Default_Handler
- 
+
   .weak      USART2_IRQHandler
   .thumb_set USART2_IRQHandler,Default_Handler
- 
+
   .weak      USART3_8_IRQHandler
   .thumb_set USART3_8_IRQHandler,Default_Handler
- 
+
   .weak      CEC_CAN_IRQHandler
   .thumb_set CEC_CAN_IRQHandler,Default_Handler
- 
+
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+
